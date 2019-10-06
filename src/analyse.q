@@ -62,7 +62,7 @@ loadfile:{
 getdaysofmonth:{[]
   $[`month in key .analytics.args;
     "I"$first .analytics.args[`month];
-    [a:exec expense_date from .analytics.args;
+    [a:exec expense_date from .analytics.data;
      if[(1<count distinct `month$a)or 1<count distinct `year$a;
         '"getdaysofmonth: There seems to be more months/years in the dataset. Please check ..."];
      mnth:first distinct`mm$a;year:first distinct`year$a]
@@ -88,9 +88,7 @@ pivTab:{[pCol]
   	train_bus_tube:count[getdaysofmonth[]]#0f);{[x] ?[.analytics.data;enlist(in;`expense_category;enlist x);
   	(enlist`expense_date)!enlist`expense_date;(enlist x)!enlist(sum;`expense_amount)]}'[exec distinct expense_category 
   	from .analytics.data]];
-  res:update wd:`free from(update wd:{?[any(`Saturday`Sunday)~\:x;`free;`work]
-  	}'[dow]from update dow:(.analytics.weekdays mod[exec expense_date from res;7])from res)where 
-    expense_date in exec date from holiday where month=`mm$.z.d;
+  res:(update wd:{?[any(`Saturday`Sunday)~\:x;`free;`work]}'[dow]from update dow:(.analytics.weekdays mod[exec expense_date from res;7])from res)lj`expense_date xkey update wd:`free from select expense_date:date from holiday;
   :`wd`dow`expense_date`stat xkey update stat:{[x;y]$[(`free~x)&y>0;`warn;`]}'[wd;meals_and_entertainment]from res;
  };
 
