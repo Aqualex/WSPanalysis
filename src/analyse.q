@@ -42,7 +42,7 @@ getfields:{
 
 loadConfigFiles:{[x;y]
   //function to load config files
-  tp:raze exec types from(("S*";enlist"|")0:.util.filemap`configProfile.psv)where file in x; 
+  tp:raze exec types from(("S*";enlist"|")0:.util.filemap`configProfile.psv)where file in x;
   :(raze tp;enlist(",";"|")`psv~y)0:.util.filemap x; 
  };
 
@@ -60,11 +60,13 @@ loadfile:{
   };
 
 getdaysofmonth:{[]
-  mnth:$[`month in key .analytics.args;
-         "I"$first .analytics.args[`month];
-         `mm$.z.D
-         ];
-  year:`year$.z.D; 
+  $[`month in key .analytics.args;
+    "I"$first .analytics.args[`month];
+    [a:exec expense_date from .analytics.args;
+     if[(1<count distinct `month$a)or 1<count distinct `year$a;
+        '"getdaysofmonth: There seems to be more months/years in the dataset. Please check ..."];
+     mnth:first distinct`mm$a;year:first distinct`year$a]
+    ]; 
   dim:.analytics.args[`daysinmonth]`$"0",string mnth; 
   :("D"$"."sv string(year;mnth;1))+til dim; 
  }; 
@@ -119,6 +121,6 @@ main:{[]
    //{.email.send[`to`subject`body`debug!(`$"testmail";"TESTMAIL";x;1i)]}[mail];
  }; 
 
-$[system"e";main[];@[main;::;{.log.ERROR"main: Function has failed to run with error ",x}]];
+//$[system"e";main[];@[main;::;{.log.ERROR"main: Function has failed to run with error ",x}]];
 
 //--------------------------------------------------------------------------------------------------
