@@ -67,7 +67,7 @@ getdaysofmonth:{[]
         '"getdaysofmonth: There seems to be more months/years in the dataset. Please check ..."];
      mnth:first distinct`mm$a;year:first distinct`year$a]
     ]; 
-  dim:.analytics.args[`daysinmonth]`$"0",string mnth; 
+  dim:.analytics.args[`daysinmonth]`$-2#"0",string mnth; 
   :("D"$"."sv string(year;mnth;1))+til dim; 
  }; 
 
@@ -102,6 +102,10 @@ pivTab:{[pCol]
   .snapshot.totalSpent:exec sum meals_and_entertainment from t; 
   
   .snapshot.differenceToDate:(exec 25*count i from t where wd in `work,expense_date<.z.d)-exec sum meals_and_entertainment from t where expense_date<.z.d;
+ 
+  .snapshot.totalLeft:.snapshot.totalAllowance - .snapshot.totalSpent; 
+
+  .snapshot.avgPDay:exec %[sum meals_and_entertainment;count i]from select from .snapshot.table where wd in`work,expense_date<=.z.d; 
  };
 
 //##################################################################################################
