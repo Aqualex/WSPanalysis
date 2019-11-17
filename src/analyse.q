@@ -26,10 +26,7 @@
 
 system"export LD_LIBRARY_PATH=PATH";
 //loading the q.q file 
-@[system;
-  "l ",getenv`QINIT;
-  {.log.ERROR"Failed to load q.q file with error ",x," ..."}
-  ];
+@[system;"l ",getenv`QINIT;{.log.ERROR"Failed to load q.q file with error ",x," ..."}];
 
 //##################################################################################################
 //     DEFINING FUNCTIONS                                                                         ##
@@ -88,7 +85,9 @@ pivTab:{[pCol]
   	train_bus_tube:count[getdaysofmonth[]]#0f);{[x] ?[.analytics.data;enlist(in;`expense_category;enlist x);
   	(enlist`expense_date)!enlist`expense_date;(enlist x)!enlist(sum;`expense_amount)]}'[exec distinct expense_category 
   	from .analytics.data]];
-  res:(update wd:{?[any(`Saturday`Sunday)~\:x;`free;`work]}'[dow]from update dow:(.analytics.weekdays mod[exec expense_date from res;7])from res)lj`expense_date xkey update wd:`free from select expense_date:date from holiday;
+  res:(update wd:{?[any(`Saturday`Sunday)~\:x;`free;`work]}'[dow]from update 
+  	dow:(.analytics.weekdays mod[exec expense_date from res;7])from res)lj`expense_date xkey 
+    update wd:`free from select expense_date:date from holiday;
   :`wd`dow`expense_date`stat xkey update stat:{[x;y]$[(`free~x)&y>0;`warn;`]}'[wd;meals_and_entertainment]from res;
  };
 
@@ -98,14 +97,12 @@ pivTab:{[pCol]
     from(0!t)where wd in`work; 
   
   .snapshot.totalAllowance:25*exec count i from t where wd in`work;
-  
   .snapshot.totalSpent:exec sum meals_and_entertainment from t; 
-  
-  .snapshot.differenceToDate:(exec 25*count i from t where wd in `work,expense_date<.z.d)-exec sum meals_and_entertainment from t where expense_date<.z.d;
- 
+  .snapshot.differenceToDate:(exec 25*count i from t where wd in `work,expense_date<.z.d) - 
+    exec sum meals_and_entertainment from t where expense_date<.z.d;
   .snapshot.totalLeft:.snapshot.totalAllowance - .snapshot.totalSpent; 
-
-  .snapshot.avgPDay:exec %[sum meals_and_entertainment;count i]from select from .snapshot.table where wd in`work,expense_date<=.z.d; 
+  .snapshot.avgPDay:exec %[sum meals_and_entertainment;count i]from select from .snapshot.table 
+    where wd in`work,expense_date<=.z.d; 
  };
 
 //##################################################################################################
@@ -123,6 +120,6 @@ main:{[]
    //{.email.send[`to`subject`body`debug!(`$"testmail";"TESTMAIL";x;1i)]}[mail];
  }; 
 
-//$[system"e";main[];@[main;::;{.log.ERROR"main: Function has failed to run with error ",x}]];
+$[system"e";main[];@[main;::;{.log.ERROR"main: Function has failed to run with error ",x}]];
 
 //--------------------------------------------------------------------------------------------------
