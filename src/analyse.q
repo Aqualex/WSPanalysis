@@ -124,7 +124,9 @@ pivTab:{[pCol]
   //function to cut arrays by give number
   getCut:cBy cut arr;
   getCntChars:count msg;  
-  {[msg;cChars;x;arr]a:", "sv string arr; -1 $[not x;msg,a;(cChars#" "),a]}[msg;getCntChars]'[til count getCut;getCut]; 
+  {[msg;cChars;x;arr]
+  	a:", "sv string arr; 
+  	-1 $[not x;msg,a;(cChars#" "),a]}[msg;getCntChars]'[til count getCut;getCut]; 
   };
 
 .snapshot.display:{
