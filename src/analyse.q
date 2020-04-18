@@ -117,7 +117,9 @@ pivTab:{[pCol]
   .snapshot.weekendDays:exec count i from .snapshot.table where dow in`Sunday`Saturday;  
   .snapshot.maxDayDict:exec from .snapshot.table where meals_and_entertainment=max meals_and_entertainment;
   .snapshot.warnDates:exec expense_date from(0!.snapshot.table)where stat in`warn;
-  .snapshot.overDates:exec expense_date from .snapshot.table where meals_and_entertainment>25; 
+  .snapshot.overDates:exec expense_date from .snapshot.table where meals_and_entertainment>25;
+  .snapshot.amountWhichShouldHaveBeenSpent:25*exec count i from .snapshot.table where wd in`work, expense_date<.z.d;
+  .snapshot.amountToCorrect:.snapshot.amountWhichShouldHaveBeenSpent-.snapshot.totalSpent; 
  };
 
 .snapshot.cutBy:{[cBy;msg;arr]
@@ -142,6 +144,8 @@ pivTab:{[pCol]
   -1" Total allowance for this month : ",string .snapshot.totalAllowance;
   -1" Total spent so far             : ",string .snapshot.totalSpent;
   -1" Total left to spend            : ",string .snapshot.totalLeft;
+  -1" Amount should have been spent  : ",string .snapshot.amountWhichShouldHaveBeenSpent;
+  -1" Amount to correct              : ",string .snapshot.amountToCorrect;
   -1" Average spent per day          : ",string .snapshot.avgPDay;
   -1" Most spent in one day          : ",string[.snapshot.maxDayDict`meals_and_entertainment]," on ",string[.snapshot.maxDayDict`dow]," : ",string[.snapshot.maxDayDict`expense_date];
   -1" Number of days off             : ",string .snapshot.daysOff;
