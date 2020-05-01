@@ -1,0 +1,27 @@
+ 
+ =======================================================================================
+                              DISPLAYING EXPENSES
+ =======================================================================================
+ 
+ DATE: 2020.05.01
+ TIME: 22:54:20.939
+ 
+ Total allowance for this month : 550
+ Total spent so far             : 523.19
+ Total left to spend            : 26.81
+ Amount should have been spent  : 550
+ Amount to correct              : 26.81
+ Average spent per day          : 23.78136
+ Most spent in one day          : 65.69 on Wednesday : 2020.04.22
+ Number of days off             : 8
+ Number of weekend days         : 8
+ Number of holidays             : 0
+ Number of dates amount exceeded: 11 : 2020.04.02, 2020.04.06, 2020.04.07, 2020.04.08
+                                       2020.04.10, 2020.04.13, 2020.04.15, 2020.04.16
+                                       2020.04.22, 2020.04.23, 2020.04.29
+ 
+ =======================================================================================
+                                END OF DISPLAY
+ =======================================================================================
+ 
+ Executed in: 0D00:00:00.003106000

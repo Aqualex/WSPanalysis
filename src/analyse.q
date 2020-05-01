@@ -128,37 +128,51 @@ pivTab:{[pCol]
   getCntChars:count msg;  
   {[msg;cChars;x;arr]
   	a:", "sv string arr; 
-  	-1 $[not x;msg,a;(cChars#" "),a]}[msg;getCntChars]'[til count getCut;getCut]; 
+  	w$[not x;msg,a;(cChars#" "),a]}[msg;getCntChars]'[til count getCut;getCut]; 
+  };
+
+.snapshot.createReportHandle:{
+  if[@[value;`.snapshot.reportHandle;0b]or not`createReport in key .analytics.args;:()];
+  logPath:getenv[`WSP_HOME],"/logDir/logFile_",string[system"p"],"_",ssr[string .z.d;".";""],"_",ssr[string .z.t;":";""],".log";
+  h:@[hopen;hsym`$logPath;0j];
+  if[not h;-2"Can't open handle to logFile. Switch to just console output";exit 1];
+  set[`.snapshot.reportHandle;h];
+  };
+
+w:{[msg]
+  //function to write lines to file
+  .snapshot.createReportHandle[];
+  $[@[value;`.snapshot.reportHandle;0b];[neg[.snapshot.reportHandle]msg;-1 msg];-1 msg];
   };
 
 .snapshot.display:{
   //function to create report 
-  -1" ";
-  -1" =======================================================================================";
-  -1"                              DISPLAYING EXPENSES";
-  -1" =======================================================================================";
-  -1" ";
-  -1" DATE: ",string .z.d;
-  -1" TIME: ",string .z.t;
-  -1" ";
-  -1" Total allowance for this month : ",string .snapshot.totalAllowance;
-  -1" Total spent so far             : ",string .snapshot.totalSpent;
-  -1" Total left to spend            : ",string .snapshot.totalLeft;
-  -1" Amount should have been spent  : ",string .snapshot.amountWhichShouldHaveBeenSpent;
-  -1" Amount to correct              : ",string .snapshot.amountToCorrect;
-  -1" Average spent per day          : ",string .snapshot.avgPDay;
-  -1" Most spent in one day          : ",string[.snapshot.maxDayDict`meals_and_entertainment]," on ",string[.snapshot.maxDayDict`dow]," : ",string[.snapshot.maxDayDict`expense_date];
-  -1" Number of days off             : ",string .snapshot.daysOff;
-  -1" Number of weekend days         : ",string .snapshot.weekendDays;
-  -1" Number of holidays             : ",string .snapshot.daysOff - .snapshot.weekendDays;
+  w" ";
+  w" =======================================================================================";
+  w"                              DISPLAYING EXPENSES";
+  w" =======================================================================================";
+  w" ";
+  w" DATE: ",string .z.d;
+  w" TIME: ",string .z.t;
+  w" ";
+  w" Total allowance for this month : ",string .snapshot.totalAllowance;
+  w" Total spent so far             : ",string .snapshot.totalSpent;
+  w" Total left to spend            : ",string .snapshot.totalLeft;
+  w" Amount should have been spent  : ",string .snapshot.amountWhichShouldHaveBeenSpent;
+  w" Amount to correct              : ",string .snapshot.amountToCorrect;
+  w" Average spent per day          : ",string .snapshot.avgPDay;
+  w" Most spent in one day          : ",string[.snapshot.maxDayDict`meals_and_entertainment]," on ",string[.snapshot.maxDayDict`dow]," : ",string[.snapshot.maxDayDict`expense_date];
+  w" Number of days off             : ",string .snapshot.daysOff;
+  w" Number of weekend days         : ",string .snapshot.weekendDays;
+  w" Number of holidays             : ",string .snapshot.daysOff - .snapshot.weekendDays;
   .snapshot.cutBy[4;" Number of warns in report      : ",(-2#"0",string[count .snapshot.warnDates])," : ";.snapshot.warnDates];
   .snapshot.cutBy[4;" Number of dates amount exceeded: ",string[count .snapshot.overDates]," : ";.snapshot.overDates];
-  -1" ";
-  -1" =======================================================================================";
-  -1"                                END OF DISPLAY";
-  -1" =======================================================================================";
-  -1" ";
-  -1" Executed in: ",string x;
+  w" ";
+  w" =======================================================================================";
+  w"                                END OF DISPLAY";
+  w" =======================================================================================";
+  w" ";
+  w" Executed in: ",string x;
   };
 
 //##################################################################################################
